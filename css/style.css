@@ -1,0 +1,662 @@
+/* ================= ROOT VARIABLES ================= */
+:root {
+  --primary: #0066cc;
+  --secondary: #ffcc00;
+  --accent: #ff7b00;
+
+  --text: #333;
+  --text-muted: #666;
+
+  --border: #e0e0e0;
+}
+
+/* ================= RESET ================= */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Poppins", sans-serif;
+  background: linear-gradient(135deg, #0f172a, #1e293b);
+  color: white;
+}
+
+/* ================= HEADER ================= */
+header {
+  text-align: center;
+  padding: 60px 20px 30px;
+  position: relative;
+}
+
+header h1 {
+  font-size: 2.2rem;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+header .subtitle {
+  color: #cbd5f5;
+}
+
+/* tombol kembali */
+header .btn {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+}
+
+/* ================= BUTTON ================= */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.25s;
+  text-decoration: none;
+}
+
+.btn-primary {
+  background: linear-gradient(45deg, #3b82f6, #6366f1);
+  color: white;
+}
+
+.btn-primary:hover {
+  transform: scale(1.05);
+}
+
+.btn-secondary {
+  background: var(--secondary);
+  color: black;
+}
+
+.btn-secondary:hover {
+  background: #e6b800;
+}
+
+.btn-sm {
+  padding: 6px 12px;
+  font-size: 0.85rem;
+}
+
+/* ================= HOME ================= */
+.home-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.menu-grid {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 30px;
+  padding: 40px 20px;
+}
+
+/* CARD */
+.menu-card {
+  width: 320px;
+  padding: 30px;
+  border-radius: 20px;
+  text-align: center;
+
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(15px);
+
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+
+  transition: 0.3s;
+}
+
+.menu-card:hover {
+  transform: translateY(-10px) scale(1.03);
+}
+
+/* ICON */
+.menu-card .icon {
+  font-size: 3rem;
+  margin-bottom: 15px;
+
+  background: linear-gradient(45deg, #38bdf8, #6366f1);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.menu-card h2 {
+  margin: 10px 0;
+}
+
+.menu-card p {
+  color: #cbd5f5;
+  font-size: 0.9rem;
+}
+
+/* ================= CONTAINER UMUM ================= */
+.stok-container,
+.tracking-container {
+  max-width: 1200px;
+  margin: auto;
+  padding: 30px;
+}
+
+/* ================= FILTER ================= */
+.filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+
+  padding: 15px;
+  border-radius: 12px;
+
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+}
+
+.filter-bar select {
+  padding: 8px 10px;
+  border-radius: 6px;
+  border: none;
+}
+
+/* ================= TABLE ================= */
+.stok-table,
+.tracking-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.stok-table th,
+.tracking-table th {
+  background: var(--primary);
+  color: white;
+}
+
+.stok-table th,
+.stok-table td,
+.tracking-table th,
+.tracking-table td {
+  padding: 10px;
+  text-align: center;
+  font-size: 0.9rem;
+}
+
+/* ================= STATUS ================= */
+.status-aman {
+  color: #22c55e;
+  font-weight: bold;
+}
+
+.status-menipis {
+  color: #f59e0b;
+  font-weight: bold;
+}
+
+.status-kosong {
+  color: #ef4444;
+  font-weight: bold;
+}
+
+/* ================= FORM ================= */
+.form-card {
+  padding: 25px;
+  border-radius: 12px;
+  margin-bottom: 30px;
+
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 15px;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-field input {
+  padding: 10px;
+  border-radius: 6px;
+  border: none;
+  background: white;
+}
+
+.form-field select {
+  padding: 10px;
+  border-radius: 6px;
+  border: none;
+  background: white;
+  color: black;
+  
+}
+
+/* ================= MODAL ================= */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(15, 23, 42, 0.75);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+}
+
+.modal-content {
+  background: rgba(30, 41, 59, 0.6);
+  backdrop-filter: blur(20px);
+  border-radius: 20px;
+  padding: 30px;
+  width: 600px;
+  max-width: 95%;
+  color: #fff;
+
+  border: 1px solid rgba(255,255,255,0.1);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+
+  animation: fadeIn 0.3s ease;
+}
+
+.modal-content h2 {
+  text-align: left;
+  font-size: 1.5rem;
+  margin-bottom: 5px;
+}
+
+.modal-content::after {
+  
+  display: block;
+  font-size: 0.9rem;
+  color: #cbd5f5;
+  margin-bottom: 20px;
+}
+
+.modal-content form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+}
+
+/* Full width */
+.modal-content .form-group:nth-child(1),
+.modal-content .form-group:nth-child(2),
+.modal-content .form-group:last-child {
+  grid-column: span 2;
+}
+
+.form-group label {
+  font-size: 0.8rem;
+  color: #cbd5f5;
+  margin-bottom: 5px;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.1);
+
+  background: rgba(255,255,255,0.05);
+  color: #fff;
+  font-size: 0.9rem;
+
+  transition: all 0.25s ease;
+}
+
+/* Placeholder */
+.form-group input::placeholder {
+  color: #94a3b8;
+}
+
+/* Focus effect */
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  border-color: #3b82f6;
+  background: rgba(255,255,255,0.08);
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(59,130,246,0.3);
+}
+
+.form-group textarea {
+  grid-column: span 2;
+}
+
+.modal-actions {
+  grid-column: span 2;
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 15px;
+}
+
+/* Batal */
+.modal-actions .btn-secondary {
+  background: rgba(255,255,255,0.1);
+  color: #fff;
+  border-radius: 10px;
+  padding: 10px 16px;
+  transition: 0.3s;
+}
+
+.modal-actions .btn-secondary:hover {
+  background: rgba(255,255,255,0.2);
+}
+
+/* Simpan */
+.modal-actions .btn-primary {
+  background: linear-gradient(135deg, #3b82f6, #6366f1);
+  color: #fff;
+  border-radius: 10px;
+  padding: 10px 18px;
+  box-shadow: 0 6px 20px rgba(59,130,246,0.4);
+}
+
+.modal-actions .btn-primary:hover {
+  transform: scale(1.05);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ================= TIMELINE ================= */
+.timeline {
+  list-style: none;
+  padding-left: 0;
+}
+
+.timeline li {
+  border-left: 2px solid var(--border);
+  padding-left: 20px;
+  margin-bottom: 15px;
+}
+
+/* ================= FOOTER ================= */
+footer {
+  text-align: center;
+  padding: 20px;
+  color: #94a3b8;
+}
+
+/* ================= RESPONSIVE ================= */
+@media (max-width: 768px) {
+  .menu-card {
+    width: 100%;
+  }
+}
+
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  padding: 12px 20px;
+  border-radius: 10px;
+  border: none;
+
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-decoration: none;
+
+  color: #fff;
+  background: linear-gradient(135deg, #3b82f6, #6366f1);
+
+  box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+
+  transition: all 0.3s ease;
+}
+
+/* Hover effect */
+.btn-primary:hover {
+  background: linear-gradient(135deg, #2563eb, #4f46e5);
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: 0 8px 25px rgba(59, 130, 246, 0.5);
+}
+
+/* Klik effect */
+.btn-primary:active {
+  transform: scale(0.97);
+  box-shadow: 0 2px 10px rgba(59, 130, 246, 0.3);
+}
+
+/* Icon di dalam tombol */
+.btn-primary i {
+  font-size: 0.9rem;
+}
+
+/* FIX SELECT (DROPDOWN) */
+select {
+  color: white;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* OPTION (ISI DROPDOWN) */
+select option {
+  color: black; /* ini penting biar kebaca */
+  background: white;
+}
+
+/* SAAT FOCUS */
+select:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.6);
+}
+
+/* ================= MODAL TRACKING MODERN ================= */
+
+/* Overlay */
+.modal-tracking {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+
+  background: rgba(0, 0, 0, 0.9);
+  /* backdrop-filter: blur(1px); */
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  z-index: 3000;
+  animation: fadeIn 0.3s ease;
+}
+
+/* Box */
+.modal-tracking-content {
+  width: 90%;
+  max-width: 600px;
+  max-height: 85vh;
+  overflow-y: auto;
+
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(20px);
+
+  border-radius: 16px;
+  padding: 25px;
+
+  color: white;
+
+  box-shadow: 0 15px 50px rgba(0, 0, 0, 0.5);
+  animation: slideUp 0.3s ease;
+}
+
+/* Header */
+.modal-tracking-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.modal-tracking-header h3 {
+  margin: 0;
+  font-size: 1.3rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Close Button */
+.btn-close-modal {
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  color: white;
+
+  width: 35px;
+  height: 35px;
+
+  border-radius: 50%;
+  cursor: pointer;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  transition: 0.3s;
+}
+
+.btn-close-modal:hover {
+  background: #ef4444;
+  transform: rotate(90deg);
+}
+
+/* ================= DO INFO ================= */
+.do-info {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+  padding: 15px;
+  margin-bottom: 20px;
+}
+
+.do-info-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  font-size: 0.95rem;
+}
+
+.do-info-label {
+  color: #cbd5f5;
+}
+
+.do-info-value {
+  font-weight: 600;
+  text-align: right;
+}
+
+/* ================= STATUS BADGE ================= */
+.status-badge {
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.status-proses {
+  background: rgba(250, 204, 21, 0.2);
+  color: #facc15;
+}
+
+.status-kirim {
+  background: rgba(59, 130, 246, 0.2);
+  color: #3b82f6;
+}
+
+.status-sampai {
+  background: rgba(34, 197, 94, 0.2);
+  color: #22c55e;
+}
+
+/* ================= TIMELINE ================= */
+.timeline {
+  list-style: none;
+  padding-left: 0;
+  margin-top: 10px;
+}
+
+.timeline li {
+  position: relative;
+  padding-left: 25px;
+  margin-bottom: 15px;
+
+  border-left: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.timeline li::before {
+  content: "";
+  position: absolute;
+  left: -6px;
+  top: 5px;
+
+  width: 10px;
+  height: 10px;
+
+  border-radius: 50%;
+  background: #3b82f6;
+}
+
+.timeline-time {
+  display: block;
+  font-size: 0.8rem;
+  color: #94a3b8;
+  margin-bottom: 3px;
+}
+
+.timeline-desc {
+  font-size: 0.9rem;
+}
+
+/* ================= ANIMATION ================= */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(30px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
