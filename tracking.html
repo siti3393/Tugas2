@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tracking Delivery Order | SISTA</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+  </head>
+  <body>
+    <header>
+      <a href="index.html" class="btn btn-secondary">
+        <i class="fa-left-long fa-solid"></i> Kembali
+      </a>
+      <h1><i class="fa-solid fa-truck-fast"></i> Tracking Delivery Order</h1>
+      <p class="subtitle">
+        Kelola dan lacak status pengiriman paket bahan ajar
+      </p>
+    </header>
+
+    <div id="trackingApp" class="tracking-container" v-cloak>
+      <!-- Form Input DO -->
+      <div class="form-card">
+        <h2>
+          <i class="fa-solid fa-file-invoice"></i>
+          Input Delivery Order Baru
+        </h2>
+
+        <form @submit.prevent="simpanDO">
+          <div class="form-grid">
+            <div class="form-field">
+              <label>Nomor DO</label>
+              <input type="text" :value="nomorDO" disabled />
+            </div>
+
+            <div class="form-field">
+              <label>NIM <span style="color: red">*</span></label>
+              <input
+                type="text"
+                v-model="form.nim"
+                placeholder="Masukkan NIM"
+                required
+              />
+            </div>
+
+            <div class="form-field">
+              <label>Nama Mahasiswa <span style="color: red">*</span></label>
+              <input
+                type="text"
+                v-model="form.nama"
+                placeholder="Masukkan nama lengkap"
+                required
+              />
+            </div>
+
+            <div class="form-field">
+              <label>Ekspedisi <span style="color: red">*</span></label>
+              <select v-model="form.ekspedisi" required>
+                <option value="">-- Pilih Ekspedisi --</option>
+                <option
+                  v-for="eks in pengirimanList"
+                  :key="eks.kode"
+                  :value="eks.kode"
+                >
+                  {{ eks.nama }}
+                </option>
+              </select>
+            </div>
+
+            <div class="form-field">
+              <label>Paket Bahan Ajar <span style="color: red">*</span></label>
+              <select v-model="form.paket" required>
+                <option value="">-- Pilih Paket --</option>
+                <option v-for="p in paket" :key="p.kode" :value="p.kode">
+                  {{ p.nama }}
+                </option>
+              </select>
+            </div>
+
+            <div class="form-field">
+              <label>Tanggal Kirim <span style="color: red">*</span></label>
+              <input type="date" v-model="form.tanggalKirim" required />
+            </div>
+          </div>
+
+          <!-- Detail Paket -->
+          <div class="paket-detail" v-if="form.paket">
+            <h4><i class="fa-solid fa-box-open"></i> Detail Paket</h4>
+            <p>
+              <strong>Isi Paket:</strong> {{ selectedPaket.isi.join(", ") }}
+            </p>
+            <p class="total-harga">
+              <strong>Total Harga:</strong> {{ formatRupiah(totalHarga) }}
+            </p>
+          </div>
+
+          <div class="form-actions">
+            <button type="button" class="btn btn-secondary" @click="resetForm">
+              <i class="fa-rotate-left fa-solid"></i> Reset
+            </button>
+            <button type="submit" class="btn btn-primary">
+              <i class="fa-solid fa-paper-plane"></i> Simpan DO
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Tabel Daftar DO -->
+      <div class="tracking-table-container">
+        <h2>
+          <i class="fa-list-check fa-solid"></i>
+          Daftar Delivery Order
+        </h2>
+
+        <div v-if="Object.keys(tracking).length === 0" class="empty-state">
+          <i class="fa-solid fa-box-open"></i>
+          <p>Belum ada data delivery order</p>
+        </div>
+
+        <table class="tracking-table" v-else>
+          <thead>
+            <tr>
+              <th>No. DO</th>
+              <th>NIM</th>
+              <th>Nama</th>
+              <th>Paket</th>
+              <th>Ekspedisi</th>
+              <th>Tanggal Kirim</th>
+              <th>Total</th>
+              <th>Status</th>
+              <th>Aksi</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(data, nomorDO) in tracking" :key="nomorDO">
+              <td><strong>{{ nomorDO }}</strong></td>
+              <td>{{ data.nim }}</td>
+              <td>{{ data.nama }}</td>
+              <td>{{ data.paket }}</td>
+              <td>{{ getEkspedisiName(data.ekspedisi) }}</td>
+              <td>{{ formatTanggal(data.tanggalKirim) }}</td>
+              <td>{{ formatRupiah(data.total) }}</td>
+              <td>
+                <span :class="getStatusClass(data.status)">
+                  {{ data.status }}
+                </span>
+              </td>
+              <td>
+                <button
+                  class="btn btn-secondary btn-sm"
+                  @click="openDetailModal(nomorDO, data)"
+                >
+                  <i class="fa-solid fa-eye"></i> Detail
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Modal Detail Perjalanan -->
+      <div class="modal-tracking" v-if="showDetailModal">
+        <div class="modal-tracking-content">
+          <div class="modal-tracking-header">
+            <h3><i class="fa-solid fa-route"></i> Detail Perjalanan</h3>
+            <button class="btn-close-modal" @click="closeDetailModal">
+              <i class="fa-solid fa-xmark"></i>
+            </button>
+          </div>
+
+          <div class="do-info">
+            <div class="do-info-row">
+              <span class="do-info-label">Nomor DO:</span>
+              <span class="do-info-value">{{ selectedDO.nomor }}</span>
+            </div>
+            <div class="do-info-row">
+              <span class="do-info-label">NIM:</span>
+              <span class="do-info-value">{{ selectedDO.data.nim }}</span>
+            </div>
+            <div class="do-info-row">
+              <span class="do-info-label">Nama:</span>
+              <span class="do-info-value">{{ selectedDO.data.nama }}</span>
+            </div>
+            <div class="do-info-row">
+              <span class="do-info-label">Paket:</span>
+              <span class="do-info-value">{{ selectedDO.data.paket }}</span>
+            </div>
+            <div class="do-info-row">
+              <span class="do-info-label">Ekspedisi:</span>
+              <span class="do-info-value"
+                >{{ getEkspedisiName(selectedDO.data.ekspedisi) }}</span
+              >
+            </div>
+            <div class="do-info-row">
+              <span class="do-info-label">Total:</span>
+              <span class="do-info-value"
+                >{{ formatRupiah(selectedDO.data.total) }}</span
+              >
+            </div>
+            <div class="do-info-row">
+              <span class="do-info-label">Status:</span>
+              <span class="do-info-value">
+                <span :class="getStatusClass(selectedDO.data.status)">
+                  {{ selectedDO.data.status }}
+                </span>
+              </span>
+            </div>
+          </div>
+
+          <h4 style="color: var(--primary); margin-bottom: 15px">
+            <i class="fa-clock-rotate-left fa-solid"></i> Riwayat Perjalanan
+          </h4>
+          <ul class="timeline">
+            <li v-for="(p, idx) in selectedDO.data.perjalanan" :key="idx">
+              <span class="timeline-time">{{ p.waktu }}</span>
+              <span class="timeline-desc">{{ p.keterangan }}</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="js/dataBahanAjar.js"></script>
+    <script src="js/tracking-app.js"></script>
+  </body>
+</html>

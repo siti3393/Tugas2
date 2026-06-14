@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SITTA | Stok Bahan Ajar</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+  </head>
+  <body>
+    <header>
+      <a href="index.html" class="btn btn-secondary">
+        <i class="fa-left-long fa-solid"></i> Kembali
+      </a>
+      <h1><i class="fa-solid fa-boxes-stacked"></i> Stok Bahan Ajar</h1>
+      <p class="subtitle">Pantau kondisi stok bahan ajar di berbagai UPBJJ</p>
+    </header>
+
+    <div id="stokApp" class="stok-container" v-cloak>
+      <div class="filter-bar">
+        <select v-model="filterUPBJJ">
+          <option value="">Semua UPBJJ</option>
+          <option v-for="u in upbjjList" :key="u" :value="u">{{ u }}</option>
+        </select>
+
+        <select v-model="filterKategori" :disabled="!filterUPBJJ">
+          <option value="">Semua Kategori</option>
+          <option v-for="k in filteredKategoriList" :key="k" :value="k">
+            {{ k }}
+          </option>
+        </select>
+
+        <select v-model="filterStatus">
+          <option value="">Semua Status</option>
+          <option value="Aman">Aman</option>
+          <option value="Menipis">Menipis</option>
+          <option value="Kosong">Kosong</option>
+        </select>
+
+        <select v-model="sortBy">
+          <option value="">Urutkan</option>
+          <option value="judul">Judul</option>
+          <option value="stok">Stok</option>
+          <option value="harga">Harga</option>
+        </select>
+
+        <button class="btn btn-secondary" @click="resetFilter">
+          <i class="fa-rotate-left fa-solid"></i> Reset
+        </button>
+
+        <button class="btn btn-primary" @click="openModal('add')">
+          <i class="fa-solid fa-plus"></i> Tambah
+        </button>
+      </div>
+
+      <table class="stok-table">
+        <thead>
+          <tr>
+            <th>Kode</th>
+            <th>Judul</th>
+            <th>Kategori</th>
+            <th>UPBJJ</th>
+            <th>Lokasi Rak</th>
+            <th>Harga</th>
+            <th>Stok</th>
+            <th>Status</th>
+            <th>Catatan</th>
+            <th>Aksi</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="item in filteredData" :key="item.kode">
+            <td>{{ item.kode }}</td>
+            <td>{{ item.judul }}</td>
+            <td>{{ item.kategori }}</td>
+            <td>{{ item.upbjj }}</td>
+            <td>{{ item.lokasiRak }}</td>
+            <td>Rp {{ item.harga.toLocaleString("id-ID") }}</td>
+            <td>{{ item.qty }}</td>
+            <td :class="getStatusClass(item)">{{ getStatus(item) }}</td>
+            <td v-html="item.catatanHTML"></td>
+            <td>
+              <button
+                class="btn btn-secondary btn-sm"
+                @click="openModal('edit', item)"
+              >
+                <i class="fa-solid fa-pen"></i> Edit
+              </button>
+            </td>
+          </tr>
+          <tr v-if="filteredData.length === 0">
+            <td colspan="9" class="no-data">Tidak ada data ditemukan</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- Modal Form Tambah/Edit -->
+      <div class="modal" v-if="showModal">
+        <div class="modal-content">
+          <h2>
+            {{ modalMode === 'add' ? 'Tambah Bahan Ajar' : 'Edit Bahan Ajar' }}
+          </h2>
+
+          <form @submit.prevent="saveBahanAjar">
+            <div class="form-group">
+              <label>Kode <span style="color: red">*</span></label>
+              <input
+                type="text"
+                v-model="form.kode"
+                required
+                :readonly="modalMode==='edit'"
+              />
+            </div>
+
+            <div class="form-group">
+              <label>Judul <span style="color: red">*</span></label>
+              <input type="text" v-model="form.judul" required />
+            </div>
+
+            <div class="form-group">
+              <label>Kategori <span style="color: red">*</span></label>
+              <select v-model="form.kategori" required>
+                <option value="">-- Pilih Kategori --</option>
+                <option v-for="k in kategoriList" :key="k" :value="k">
+                  {{ k }}
+                </option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label>UPBJJ <span style="color: red">*</span></label>
+              <select v-model="form.upbjj" required>
+                <option value="">-- Pilih UPBJJ --</option>
+                <option v-for="u in upbjjList" :key="u" :value="u">
+                  {{ u }}
+                </option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label>Lokasi Rak <span style="color: red">*</span></label>
+              <input
+                type="text"
+                v-model="form.lokasiRak"
+                placeholder="Contoh: R1-A3"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label>Harga <span style="color: red">*</span></label>
+              <input type="number" v-model.number="form.harga" required />
+            </div>
+
+            <div class="form-group">
+              <label>Qty <span style="color: red">*</span></label>
+              <input type="number" v-model.number="form.qty" required />
+            </div>
+
+            <div class="form-group">
+              <label>Safety Stock <span style="color: red">*</span></label>
+              <input type="number" v-model.number="form.safety" required />
+            </div>
+
+            <div class="form-group">
+              <label>Catatan (HTML)</label>
+              <textarea v-model="form.catatanHTML" rows="3"></textarea>
+            </div>
+
+            <div class="modal-actions">
+              <button
+                type="button"
+                class="btn btn-secondary"
+                @click="closeModal"
+              >
+                <i class="fa-solid fa-xmark"></i> Batal
+              </button>
+              <button type="submit" class="btn btn-primary">
+                <i class="fa-solid fa-save"></i> Simpan
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="js/dataBahanAjar.js"></script>
+    <script src="js/stok-app.js"></script>
+  </body>
+</html>
